@@ -4,6 +4,22 @@
 	     xmlns:prism="http://prismlibrary.com/"
              xmlns:local="clr-namespace:Opener">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="passwordStyle" TargetType="DataGridCell" >
+                <Setter Property="FontFamily" Value="pack://application:,,,/Resources/#password" />
+                <Setter Property="FontSize" Value="20" />
+            </Style>
+            <Style x:Key="normalStyle" TargetType="DataGridCell" >
+                <Setter Property="FontFamily" Value="Tahoma" />
+                <Setter Property="FontSize" Value="20" />
+            </Style>
+        </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

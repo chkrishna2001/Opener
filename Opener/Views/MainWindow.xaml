@@ -2,14 +2,71 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
+        xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
         prism:ViewModelLocator.AutoWireViewModel="True"
-        Title="{Binding Title}" Height="350" Width="525">
+        Title="{Binding Title}" 
+        Name="mainWindow" 
+        Height="350" 
+        Width="525" 
+        Padding="10"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:converters="clr-namespace:Opener.Converters">
+    <Window.Resources>
+        <ResourceDictionary>
+            <converters:KeyTypeToVisibilityConverter x:Key="KeyTypeToVisibility" />
+            <converters:MultiBindingEitherOneConverter x:Key="BindOne"/>
+            <converters:KeyTypeToStyleConverter x:Key="keytostyle" />
+            <CollectionViewSource x:Key="KeytypesSource" Source="{Binding KeyTypes}" />
+        </ResourceDictionary>
+            
+    </Window.Resources>
     <Grid >
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ContentControl Grid.Row="0" prism:RegionManager.RegionName="MenuRegion" />
-        <ContentControl Grid.Row="1" prism:RegionManager.RegionName="ContentRegion" />
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Enter search term" />
+            <TextBox Grid.Column="1" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Text="{Binding SearchTerm}" />
+            <ComboBox Grid.Column="2" ItemsSource="{Binding KeyTypes}"  DisplayMemberPath="Name" SelectedItem="{Binding SelectedKeyType}" />
+        </Grid>
+
+        <DataGrid 
+            Name="dgKeys"
+            Grid.Row="1" 
+            AutoGenerateColumns="False"
+            ItemsSource="{Binding Keys}"  >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Key" 
+                                    Width="2*" 
+                                    Binding="{Binding Key}" />
+                <DataGridComboBoxColumn Header="Key Type" 
+                                        Width="2*"
+                                        ItemsSource="{Binding Source={StaticResource KeytypesSource}}"
+                                        SelectedItemBinding="{Binding KeyType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                                        SelectedValueBinding="{Binding KeyType.Id}" 
+                                        SelectedValuePath="Id"
+                                        DisplayMemberPath="Name"/>
+
+                <DataGridTextColumn Header="Path" 
+                                    Width="2*" 
+                                    Binding="{Binding Path}">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding KeyType.Id}" Value="5">
+                                    <Setter Property="FontFamily" Value="pack://application:,,,/Resources/#password" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>                   
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
