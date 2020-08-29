@@ -1,5 +1,8 @@
-﻿using Opener.Models;
+﻿using Newtonsoft.Json;
+using Opener.Models;
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -26,10 +29,24 @@ namespace Opener.Helpers
             {
                 ConvertFromBase64(remainingArgs[0]);
             }
+            else if (string.Equals(firstArg, "tf", StringComparison.OrdinalIgnoreCase))
+            {
+                tempfile(remainingArgs[0]);
+            }
             else
             {
                 ProcessStoredKeys(firstArg, remainingArgs);
             }
+        }
+        private void tempfile(string filePath)
+        {
+            string fileName = filePath;
+            if (filePath.StartsWith("."))
+            {
+                fileName = $"{DateTime.Now.Ticks}{filePath}";
+            }
+            var requiredPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.InternetCache), fileName);
+            Process.Start(openerDataHelper.GetKey("editor").Path, requiredPath);
         }
         private void ConvertToBase64(string data)
         {
@@ -49,11 +66,20 @@ namespace Opener.Helpers
                 if (key.KeyType.Id == (int)KeyTypeId.WebPath)
                 {
                     var formattedargs = args.Select(m => WebUtility.UrlEncode(m)).ToArray();
-                    System.Diagnostics.Process.Start(string.Format(key.Path, formattedargs));
+                    Process.Start(string.Format(key.Path, formattedargs));
                 }
                 else if(key.KeyType.Id == (int)KeyTypeId.Data)
                 {
                     Clipboard.SetText(key.Path, TextDataFormat.Text);
+                }
+                else if (key.KeyType.Id == (int)KeyTypeId.SecureData)
+                {
+                    Clipboard.SetText(key.Path.Base64Decode(), TextDataFormat.Text);
+                }
+                else if (key.KeyType.Id == (int)KeyTypeId.JsonData)
+                {
+                    var data = JsonConvert.DeserializeObject(key.Path);
+                    Clipboard.SetText(JsonConvert.SerializeObject(data,Formatting.Indented), TextDataFormat.Text);
                 }
             }
         }

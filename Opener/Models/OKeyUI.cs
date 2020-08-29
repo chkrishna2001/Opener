@@ -10,7 +10,8 @@ namespace Opener.Models
             base.InsertItem(index, item);
 
             // handle any EndEdit events relating to this item
-            item.ItemEndEdit += new ItemEndEditEventHandler(ItemEndEditHandler);
+            var handler = new ItemEndEditEventHandler(ItemEndEditHandler);
+            item.ItemEndEdit += handler;
         }
 
         void ItemEndEditHandler(IEditableObject sender)
@@ -27,6 +28,7 @@ namespace Opener.Models
     public delegate void ItemEndEditEventHandler(IEditableObject sender);
     public class OKeyUI : IEditableObject, INotifyPropertyChanged
     {
+        private int numberOfEdits = 0;
         private OKey keyObj;
         public OKeyUI()
         {
@@ -103,15 +105,22 @@ namespace Opener.Models
 
         public void BeginEdit()
         {
+            numberOfEdits++;
         }
 
         public void CancelEdit()
         {
+            if(--numberOfEdits < 0)
+            {
+                throw new System.Exception("Somthing went wrong");
+            }
         }
 
         public void EndEdit()
         {
-            ItemEndEdit?.Invoke(this);
+            CancelEdit();
+            if (numberOfEdits == 0)
+                ItemEndEdit?.Invoke(this);
         }
 
         #endregion

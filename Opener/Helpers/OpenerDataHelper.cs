@@ -69,7 +69,8 @@ namespace Opener.Helpers
                 KeyTypeIdToKeyType(KeyTypeId.SecureData),
             };
             var defaultKeys = new List<OKey>() {
-                new OKey() { Key = "g", KeyType = KeyTypeIdToKeyType(KeyTypeId.WebPath), Path = "https://www.google.com/search?q={0}" }
+                new OKey() { Key = "g", KeyType = KeyTypeIdToKeyType(KeyTypeId.WebPath), Path = "https://www.google.com/search?q={0}" },
+                new OKey() { Key = "editor", KeyType = KeyTypeIdToKeyType(KeyTypeId.LocalPath), Path = "" }
             };
             var keysTobeAdded = defaultKeys.Except(data.Keys, new OKeyComparer());
             data.Keys.AddRange(keysTobeAdded);
@@ -86,10 +87,6 @@ namespace Opener.Helpers
         }
         public void SaveKey(OKey oKey)
         {
-            if(oKey.KeyType.Id == (int)KeyTypeId.SecureData)
-            {
-                oKey.Path = oKey.Path.Base64Encode();
-            }
             var existing = GetKeyById(oKey.Id);
             if(existing == null)
             {

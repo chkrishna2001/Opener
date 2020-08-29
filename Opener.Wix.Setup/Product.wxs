@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"><?define Opener_TargetDir=$(var.Opener.TargetDir)?>
+	<Product Id="04CA8A5C-B91D-4956-AC28-CD6D4ADE2470" Name="Opener" Language="1033" Version="1.0.0.0" Manufacturer="Krishna Chirravuri" UpgradeCode="36e54af4-2977-4614-8ce7-75ed5a5a2352">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+
+		<Feature Id="ProductFeature" Title="Opener" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+    <UI>
+      <UIRef Id="WixUI_Minimal" />
+      <Publish Dialog="ExitDialog"
+            Control="Finish"
+            Event="DoAction"
+            Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+    </UI>
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch Opener after installation completed." />
+    <!-- Step 3: Include the custom action -->
+    <Property Id="WixShellExecTarget" Value="[#o.exe]" />
+    <CustomAction Id="LaunchApplication"
+        BinaryKey="WixCA"
+        DllEntry="WixShellExec"
+        Impersonate="yes" />
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="Opener" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+
+			<Component Id="o.exe" Guid="5a28f0ed-8e0f-49e5-8940-34702dfadfa9">
+			  <File Id="o.exe" Name="o.exe" Source="$(var.Opener_TargetDir)o.exe" KeyPath="yes" />
+        <Environment Id="PATH" Name="PATH" Value="[INSTALLFOLDER]" Permanent="no" Part="last" Action="set"  />
+			</Component>
+			<Component Id="Prism.Unity.Wpf.dll" Guid="69c758db-327a-4fc8-9614-65101e6195d0">
+			  <File Id="Prism.Unity.Wpf.dll" Name="Prism.Unity.Wpf.dll" Source="$(var.Opener_TargetDir)Prism.Unity.Wpf.dll" />
+			</Component>
+			<Component Id="Prism.Wpf.dll" Guid="5237c7f5-aa52-49aa-83b8-a1fc01be9a92">
+			  <File Id="Prism.Wpf.dll" Name="Prism.Wpf.dll" Source="$(var.Opener_TargetDir)Prism.Wpf.dll" />
+			</Component>
+			<Component Id="System.Windows.Interactivity.dll" Guid="76ec6709-1741-4326-bb8a-d91b8deb4c78">
+			  <File Id="System.Windows.Interactivity.dll" Name="System.Windows.Interactivity.dll" Source="$(var.Opener_TargetDir)System.Windows.Interactivity.dll" />
+			</Component>
+			<Component Id="Prism.dll" Guid="f1746a62-0c4c-49d8-9270-e006a14b7166">
+			  <File Id="Prism.dll" Name="Prism.dll" Source="$(var.Opener_TargetDir)Prism.dll" />
+			</Component>
+			<Component Id="Unity.Container.dll" Guid="580dfaac-ded8-4915-80c4-f6a4d524b8b3">
+			  <File Id="Unity.Container.dll" Name="Unity.Container.dll" Source="$(var.Opener_TargetDir)Unity.Container.dll" />
+			</Component>
+			<Component Id="Unity.Abstractions.dll" Guid="85d22aba-bbce-4058-86bf-c8dd31d18317">
+			  <File Id="Unity.Abstractions.dll" Name="Unity.Abstractions.dll" Source="$(var.Opener_TargetDir)Unity.Abstractions.dll" />
+			</Component>
+			<Component Id="System.Threading.Tasks.Extensions.dll" Guid="79dc96f9-d51c-4fb5-aa1b-79c81664ce0d">
+			  <File Id="System.Threading.Tasks.Extensions.dll" Name="System.Threading.Tasks.Extensions.dll" Source="$(var.Opener_TargetDir)System.Threading.Tasks.Extensions.dll" />
+			</Component>
+			<Component Id="System.Runtime.CompilerServices.Unsafe.dll" Guid="a5fa777a-ec8e-4663-be76-30ed001bac7b">
+			  <File Id="System.Runtime.CompilerServices.Unsafe.dll" Name="System.Runtime.CompilerServices.Unsafe.dll" Source="$(var.Opener_TargetDir)System.Runtime.CompilerServices.Unsafe.dll" />
+			</Component>
+			<Component Id="System.ValueTuple.dll" Guid="bc2ebf91-c991-46e0-9ab5-1e187c401e23">
+			  <File Id="System.ValueTuple.dll" Name="System.ValueTuple.dll" Source="$(var.Opener_TargetDir)System.ValueTuple.dll" />
+			</Component>
+			<Component Id="CommonServiceLocator.dll" Guid="8b9b492f-e889-4855-a024-4be67f550367">
+			  <File Id="CommonServiceLocator.dll" Name="CommonServiceLocator.dll" Source="$(var.Opener_TargetDir)CommonServiceLocator.dll" />
+			</Component>
+			<Component Id="Newtonsoft.Json.dll" Guid="20cf8bbd-f898-4b88-a561-8b786afe3e3b">
+			  <File Id="Newtonsoft.Json.dll" Name="Newtonsoft.Json.dll" Source="$(var.Opener_TargetDir)Newtonsoft.Json.dll" />
+			</Component> 
+		</ComponentGroup>
+	</Fragment>
+</Wix>

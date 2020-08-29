@@ -49,9 +49,14 @@ namespace Opener.ViewModels
         private void Keys_ItemEndEdit(System.ComponentModel.IEditableObject sender)
         {
             var uiObject = sender as OKeyUI;
-            if (!string.IsNullOrWhiteSpace(uiObject.GetDataObject().Key) && !string.IsNullOrWhiteSpace(uiObject.GetDataObject().Path))
+            var dbObject = uiObject.GetDataObject();
+            if (dbObject.KeyType.Id == (int)KeyTypeId.SecureData)
             {
-                openerDataHelper.SaveKey(uiObject.GetDataObject()); 
+                dbObject.Path = dbObject.Path.Base64Encode();
+            }
+            if (!string.IsNullOrWhiteSpace(dbObject.Key) && !string.IsNullOrWhiteSpace(dbObject.Path))
+            {
+                openerDataHelper.SaveKey(dbObject); 
             }
         }
         
