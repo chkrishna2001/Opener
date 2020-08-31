@@ -68,6 +68,10 @@ namespace Opener.Helpers
                     var formattedargs = args.Select(m => WebUtility.UrlEncode(m)).ToArray();
                     Process.Start(string.Format(key.Path, formattedargs));
                 }
+                else if (key.KeyType.Id == (int)KeyTypeId.LocalPath)
+                {
+                    Process.Start(string.Format(key.Path, args));
+                }
                 else if(key.KeyType.Id == (int)KeyTypeId.Data)
                 {
                     Clipboard.SetText(key.Path, TextDataFormat.Text);
