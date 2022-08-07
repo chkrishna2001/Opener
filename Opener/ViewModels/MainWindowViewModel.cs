@@ -50,13 +50,16 @@ namespace Opener.ViewModels
         {
             var uiObject = sender as OKeyUI;
             var dbObject = uiObject.GetDataObject();
-            if (dbObject.KeyType.Id == (int)KeyTypeId.SecureData)
+            if (dbObject.KeyType != null)
             {
-                dbObject.Path = dbObject.Path.Base64Encode();
-            }
-            if (!string.IsNullOrWhiteSpace(dbObject.Key) && !string.IsNullOrWhiteSpace(dbObject.Path))
-            {
-                openerDataHelper.SaveKey(dbObject); 
+                if (dbObject.KeyType.Id == (int)KeyTypeId.SecureData)
+                {
+                    dbObject.Path = dbObject.Path.Base64Encode();
+                }
+                if (!string.IsNullOrWhiteSpace(dbObject.Key) && !string.IsNullOrWhiteSpace(dbObject.Path))
+                {
+                    openerDataHelper.SaveKey(dbObject);
+                } 
             }
         }
         
