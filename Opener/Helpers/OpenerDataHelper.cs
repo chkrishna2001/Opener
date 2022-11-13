@@ -70,7 +70,11 @@ namespace Opener.Helpers
             };
             var defaultKeys = new List<OKey>() {
                 new OKey() { Key = "g", KeyType = KeyTypeIdToKeyType(KeyTypeId.WebPath), Path = "https://www.google.com/search?q={0}" },
-                new OKey() { Key = "editor", KeyType = KeyTypeIdToKeyType(KeyTypeId.LocalPath), Path = "" }
+                new OKey() { Key = "editor", KeyType = KeyTypeIdToKeyType(KeyTypeId.LocalPath), Path = "" },
+                new OKey() { Key = "jiraurl", KeyType = KeyTypeIdToKeyType(KeyTypeId.LocalPath), Path = "" },
+                new OKey() { Key = "jirausername", KeyType = KeyTypeIdToKeyType(KeyTypeId.Data), Path = "" },
+                new OKey() { Key = "jiratoken", KeyType = KeyTypeIdToKeyType(KeyTypeId.Data), Path = "" },
+                new OKey() { Key = "defaultjiraproject", KeyType = KeyTypeIdToKeyType(KeyTypeId.Data), Path = "" }
             };
             var keysTobeAdded = defaultKeys.Except(data.Keys, new OKeyComparer());
             data.Keys.AddRange(keysTobeAdded);

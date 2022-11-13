@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Opener.Models;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -20,25 +21,29 @@ namespace Opener.Helpers
         public void ProcessArgs(string[] args)
         {
             var firstArg = args[0];
-            var remainingArgs = args.Skip(1).ToArray();
+            var remainingArgs = args.Skip(1).ToList();
             if (string.Equals(firstArg, "en", StringComparison.OrdinalIgnoreCase))
             {
-                ConvertToBase64(remainingArgs[0]);
+                ConvertToBase64(remainingArgs.First());
             }
             else if (string.Equals(firstArg, "de", StringComparison.OrdinalIgnoreCase))
             {
-                ConvertFromBase64(remainingArgs[0]);
+                ConvertFromBase64(remainingArgs.First());
             }
             else if (string.Equals(firstArg, "tf", StringComparison.OrdinalIgnoreCase))
             {
-                tempfile(remainingArgs[0]);
+                OpenTempFile(remainingArgs.First());
+            }
+            else if (string.Equals(firstArg, "gs", StringComparison.OrdinalIgnoreCase))
+            {
+                GetJiraSummary(remainingArgs);
             }
             else
             {
                 ProcessStoredKeys(firstArg, remainingArgs);
             }
         }
-        private void tempfile(string filePath)
+        private void OpenTempFile(string filePath)
         {
             string fileName = filePath;
             if (filePath.StartsWith("."))
@@ -47,6 +52,17 @@ namespace Opener.Helpers
             }
             var requiredPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.InternetCache), fileName);
             Process.Start(openerDataHelper.GetKey("editor").Path, requiredPath);
+        }
+        private void GetJiraSummary(List<string> remainingArgs)
+        {
+            string project = openerDataHelper.GetKey("defaultjiraproject").Path;
+            string jiraUrl = openerDataHelper.GetKey("jiraurl").Path;
+            var projectOptionIndex = remainingArgs.IndexOf("-p");
+            if (projectOptionIndex != -1)
+            {
+                project = remainingArgs.ElementAtOrDefault(projectOptionIndex);
+            }
+            Process.Start($"{jiraUrl}/{project}-{remainingArgs.First()}");
         }
         private void ConvertToBase64(string data)
         {
@@ -58,7 +74,7 @@ namespace Opener.Helpers
             var bytes = Convert.FromBase64String(data);
             Clipboard.SetText(Encoding.UTF8.GetString(bytes));
         }
-        private void ProcessStoredKeys(string firstArg, string[] args)
+        private void ProcessStoredKeys(string firstArg, List<string> args)
         {
             var key = openerDataHelper.GetKey(firstArg);
             if (key != null)
