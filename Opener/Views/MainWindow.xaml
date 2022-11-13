@@ -1,9 +1,10 @@
-﻿<Window
+﻿<mah:MetroWindow
     x:Class="Opener.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="clr-namespace:Opener.Converters"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
     Name="mainWindow"
@@ -12,15 +13,22 @@
     Height="350"
     Padding="10"
     prism:ViewModelLocator.AutoWireViewModel="True">
-    <Window.Resources>
+    <mah:MetroWindow.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--  MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive!  -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <!--  Theme setting  -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Teal.xaml" />
+            </ResourceDictionary.MergedDictionaries>
             <converters:KeyTypeToVisibilityConverter x:Key="KeyTypeToVisibility" />
             <converters:MultiBindingEitherOneConverter x:Key="BindOne" />
             <converters:KeyTypeToStyleConverter x:Key="keytostyle" />
             <CollectionViewSource x:Key="KeytypesSource" Source="{Binding KeyTypes}" />
         </ResourceDictionary>
 
-    </Window.Resources>
+    </mah:MetroWindow.Resources>
     <ScrollViewer>
         <Grid>
             <Grid.RowDefinitions>
@@ -68,7 +76,8 @@
                         ItemsSource="{Binding Source={StaticResource KeytypesSource}}"
                         SelectedItemBinding="{Binding KeyType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         SelectedValueBinding="{Binding KeyType.Id}"
-                        SelectedValuePath="Id" />
+                        SelectedValuePath="Id"
+                        SortMemberPath="KeyType" />
 
                     <DataGridTextColumn
                         Width="2*"
@@ -88,4 +97,4 @@
             </DataGrid>
         </Grid>
     </ScrollViewer>
-</Window>
+</mah:MetroWindow>

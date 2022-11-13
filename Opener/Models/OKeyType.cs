@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 
 namespace Opener.Models
 {
-    public class OKeyType
+    public class OKeyType:IComparable
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
+        public int CompareTo(object obj)
+        {
+            return ((OKeyType)obj).Name.GetHashCode();
+        }
     }
     public enum KeyTypeId
     {
